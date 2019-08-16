@@ -3,15 +3,12 @@
 </div>
 
 <h3 align="center">FillProgressLayout</h3>
-
+<h4 align="center" >:zap:A simple and flexible FillProgressLayout written in Kotlin:zap:</h4>
 
 --------------
+
 <a href="https://github.com/JDevZone/FillProgressLayout">
 <img align="left" src="https://github.com/JDevZone/FillProgressLayout/blob/master/sample.gif" width="100%" height="10%" /></a>
-
-
-
-<h4 align="center" >:zap:A simple and flexible FillProgressLayout written in Kotlin:zap:</h4>
 
 
 
