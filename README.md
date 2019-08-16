@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/JDevZone/FillProgressLayout/blob/master/logo.png" alt="" width="70px" height="70px">
+  <img src="https://github.com/JDevZone/FillProgressLayout/blob/master/lib_logo.png" alt="" width="70px" height="70px">
 </div>
 
 <h3 align="center">FillProgressLayout</h3>
