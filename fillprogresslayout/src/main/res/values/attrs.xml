@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	
+	<declare-styleable name="FillProgressLayout">
+		<attr name="fpl_backgroundColor" format="color|reference"/>
+		<attr name="fpl_progressColor" format="color|reference"/>
+		<attr name="fpl_roundedCornerRadius" format="float"/>
+		<attr name="fpl_isRounded" format="boolean"/>
+		<attr name="fpl_shouldRestart" format="boolean"/>
+		<attr name="fpl_progressDuration" format="integer"/>
+		<attr name="fpl_progress" format="integer"/>
+		<attr name="fpl_progressDirection" format="enum">
+			<enum name="left_to_right" value="0"/>
+			<enum name="right_to_left" value="1"/>
+			<enum name="top_to_bottom" value="2"/>
+			<enum name="bottom_to_top" value="3"/>
+		</attr>
+	</declare-styleable>
+	
+</resources>
