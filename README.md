@@ -3,7 +3,7 @@
 </div>
 
 <h3 align="center">FillProgressLayout</h3>
-<h4 align="center" >:zap:A simple and flexible FillProgressLayout written in Kotlin:zap:</h4>
+<h4 align="center" >:fire:A simple and flexible FillProgressLayout written in Kotlin:fire:</h4>
 
 --------------
 
