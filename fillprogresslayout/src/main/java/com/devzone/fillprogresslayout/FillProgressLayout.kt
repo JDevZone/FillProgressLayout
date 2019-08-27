@@ -119,12 +119,12 @@ class FillProgressLayout : LinearLayout {
 
     private fun initPaint() {
         backgroundPaint.apply {
-            this.style = Paint.Style.FILL
-            this.color = mBackgroundColor
+            style = Paint.Style.FILL
+            color = mBackgroundColor
         }
         progressPaint.apply {
-            this.style = Paint.Style.FILL
-            this.color = mProgressColor
+            style = Paint.Style.FILL
+            color = mProgressColor
         }
 
     }
@@ -166,26 +166,29 @@ class FillProgressLayout : LinearLayout {
     }
 
     private fun drawNormalProgress(canvas: Canvas?) {
-        canvas?.let {
-            it.drawRect(backRectF, backgroundPaint)
-            it.drawRect(progressRectF, progressPaint)
+        canvas?.apply {
+            drawRect(backRectF, backgroundPaint)
+            drawRect(progressRectF, progressPaint)
         }
     }
 
     private fun drawRoundedProgress(canvas: Canvas?) {
-        canvas?.let {
-            it.drawRoundRect(backRectF, mCornerRadius, mCornerRadius, backgroundPaint)
-            it.drawRoundRect(progressRectF, mCornerRadius, mCornerRadius, progressPaint)
+        canvas?.apply {
+            save()
+            drawRoundRect(backRectF, mCornerRadius, mCornerRadius, backgroundPaint)
+            clipPath(clipPath)
+            drawRect(progressRectF, progressPaint)
+            restore()
         }
     }
 
-    override fun dispatchDraw(canvas: Canvas?) {
-        if (isRounded)
-            canvas?.clipPath(clipPath)
-        super.dispatchDraw(canvas)
-    }
 
     private fun isValidRes(res: Int) = res != View.NO_ID
+
+    override fun onDetachedFromWindow() {
+        clearAnimation()
+        super.onDetachedFromWindow()
+    }
 
 //---------------------public setters--------------------------------------------------------------------//
 
