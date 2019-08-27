@@ -178,8 +178,8 @@ class FillProgressLayout : LinearLayout {
         canvas?.apply {
             save()
             drawRoundRect(backRectF, mCornerRadius, mCornerRadius, backgroundPaint)
-            clipPath(clipProgressPath, Region.Op.INTERSECT)
-            drawRoundRect(progressRectF, mCornerRadius, mCornerRadius, progressPaint)
+            clipPath(clipProgressPath)
+            drawRect(progressRectF, progressPaint)
             restore()
         }
     }

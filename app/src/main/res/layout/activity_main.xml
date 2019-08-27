@@ -14,6 +14,7 @@
             app:fpl_progressColor="@color/colorGreenTrans"
             app:fpl_isRounded="true"
             app:fpl_progress="0"
+            app:fpl_roundedCornerRadius="50"
             app:fpl_progressDuration="3000"
             app:fpl_progressDirection="left_to_right"
             app:fpl_shouldRestart="false"
