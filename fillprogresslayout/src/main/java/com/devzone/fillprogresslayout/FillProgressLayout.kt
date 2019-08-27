@@ -56,6 +56,7 @@ class FillProgressLayout : LinearLayout {
     private val clipPath = Path()
     private var progressRectF = RectF()
     private var backRectF = RectF()
+    private var clipProgressPath = Path()
 
 
     constructor(context: Context) : super(context) {
@@ -138,6 +139,7 @@ class FillProgressLayout : LinearLayout {
         if (isRounded) {
             clipPath.addRoundRect(backRectF, mCornerRadius, mCornerRadius, Path.Direction.CW)
             clipPath.close()
+            clipProgressPath.set(clipPath)
         }
 
     }
@@ -166,16 +168,19 @@ class FillProgressLayout : LinearLayout {
     }
 
     private fun drawNormalProgress(canvas: Canvas?) {
-        canvas?.let {
-            it.drawRect(backRectF, backgroundPaint)
-            it.drawRect(progressRectF, progressPaint)
+        canvas?.apply {
+            drawRect(backRectF, backgroundPaint)
+            drawRect(progressRectF, progressPaint)
         }
     }
 
     private fun drawRoundedProgress(canvas: Canvas?) {
-        canvas?.let {
-            it.drawRoundRect(backRectF, mCornerRadius, mCornerRadius, backgroundPaint)
-            it.drawRoundRect(progressRectF, mCornerRadius, mCornerRadius, progressPaint)
+        canvas?.apply {
+            save()
+            drawRoundRect(backRectF, mCornerRadius, mCornerRadius, backgroundPaint)
+            clipPath(clipProgressPath, Region.Op.INTERSECT)
+            drawRoundRect(progressRectF, mCornerRadius, mCornerRadius, progressPaint)
+            restore()
         }
     }
 
@@ -186,6 +191,11 @@ class FillProgressLayout : LinearLayout {
     }
 
     private fun isValidRes(res: Int) = res != View.NO_ID
+
+    override fun onDetachedFromWindow() {
+        clearAnimation()
+        super.onDetachedFromWindow()
+    }
 
 //---------------------public setters--------------------------------------------------------------------//
 
