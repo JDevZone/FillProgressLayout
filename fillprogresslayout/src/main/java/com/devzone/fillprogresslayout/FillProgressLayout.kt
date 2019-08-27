@@ -56,7 +56,6 @@ class FillProgressLayout : LinearLayout {
     private val clipPath = Path()
     private var progressRectF = RectF()
     private var backRectF = RectF()
-    private var clipProgressPath = Path()
 
 
     constructor(context: Context) : super(context) {
@@ -120,12 +119,12 @@ class FillProgressLayout : LinearLayout {
 
     private fun initPaint() {
         backgroundPaint.apply {
-            this.style = Paint.Style.FILL
-            this.color = mBackgroundColor
+            style = Paint.Style.FILL
+            color = mBackgroundColor
         }
         progressPaint.apply {
-            this.style = Paint.Style.FILL
-            this.color = mProgressColor
+            style = Paint.Style.FILL
+            color = mProgressColor
         }
 
     }
@@ -139,7 +138,6 @@ class FillProgressLayout : LinearLayout {
         if (isRounded) {
             clipPath.addRoundRect(backRectF, mCornerRadius, mCornerRadius, Path.Direction.CW)
             clipPath.close()
-            clipProgressPath.set(clipPath)
         }
 
     }
@@ -178,17 +176,12 @@ class FillProgressLayout : LinearLayout {
         canvas?.apply {
             save()
             drawRoundRect(backRectF, mCornerRadius, mCornerRadius, backgroundPaint)
-            clipPath(clipProgressPath)
+            clipPath(clipPath)
             drawRect(progressRectF, progressPaint)
             restore()
         }
     }
 
-    override fun dispatchDraw(canvas: Canvas?) {
-        if (isRounded)
-            canvas?.clipPath(clipPath)
-        super.dispatchDraw(canvas)
-    }
 
     private fun isValidRes(res: Int) = res != View.NO_ID
 
