@@ -12,10 +12,9 @@
             android:layout_margin="30dp"
             app:fpl_backgroundColor="@color/colorRedTrans"
             app:fpl_progressColor="@color/colorGreenTrans"
-            app:fpl_isRounded="true"
+            app:fpl_isRounded="false"
             app:fpl_progress="0"
-            app:fpl_roundedCornerRadius="50"
-            app:fpl_progressDuration="3000"
+            app:fpl_progressDuration="2000"
             app:fpl_progressDirection="left_to_right"
             app:fpl_shouldRestart="false"
             android:layout_width="match_parent"
@@ -57,14 +56,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
     </RelativeLayout>
-    <SeekBar
-            android:id="@+id/seek"
-            android:background="#facb98"
-            android:max="100"
-            android:layout_marginTop="150dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:padding="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="80dp"
+            android:onClick="toggleFill"
+            android:text="fill"
+            tools:ignore="HardcodedText" />
 </LinearLayout>

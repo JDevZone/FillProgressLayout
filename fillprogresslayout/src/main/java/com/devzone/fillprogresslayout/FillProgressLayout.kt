@@ -15,7 +15,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 
 
-@Suppress("unused")
 class FillProgressLayout : LinearLayout {
 
     companion object {
@@ -56,6 +55,7 @@ class FillProgressLayout : LinearLayout {
     private val clipPath = Path()
     private var progressRectF = RectF()
     private var backRectF = RectF()
+    private var doOnProgressEnd:((v:View)->Unit)?=null
 
 
     constructor(context: Context) : super(context) {
@@ -202,7 +202,7 @@ class FillProgressLayout : LinearLayout {
                 updateRect(rectF = progressRectF)
                 ViewCompat.postInvalidateOnAnimation(this)
             }
-            animator.doOnEnd { if (!isRestart) oldProgress = p }
+            animator.doOnEnd {doOnProgressEnd?.invoke(this); if (!isRestart) oldProgress = p }
             animator.setDuration(((kotlin.math.abs(p - oldProgress)) * mDurationFactor).toLong()).start()
         }
     }
@@ -245,6 +245,9 @@ class FillProgressLayout : LinearLayout {
         mDirection = if (direction in LEFT_TO_RIGHT..BOTTOM_TO_TOP) direction else defDirection
     }
 
+    fun setDoOnProgressEnd(listener:((v:View)->Unit)){
+        doOnProgressEnd=listener
+    }
 
     //--------------------------------------------------------------------- --------------------------------------------//
     // default background setters overridden as we have our own background color implementation [#backRectF]
