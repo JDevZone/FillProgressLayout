@@ -2,8 +2,8 @@ package com.devzone.fpl_sample
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -17,12 +17,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun toggleFill(view: View) {
-        val button: AppCompatButton = view as AppCompatButton
+        val button: Button = view as Button
         button.isEnabled = false
 
         isFilled = !isFilled
         fillL.setProgress(if (isFilled) 100 else 0)
-        fillL.setDoOnProgressEnd { v ->
+        fillB.setProgress(if (isFilled) 100 else 0)
+        fillB.setDoOnProgressEnd { v ->
             button.isEnabled = true;button.text = if (isFilled) "Unfill" else "Fill"
         }
 
