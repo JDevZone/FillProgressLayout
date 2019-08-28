@@ -8,7 +8,8 @@
 --------------
 
 <a href="https://github.com/JDevZone/FillProgressLayout">
-<img align="left" src="https://github.com/JDevZone/FillProgressLayout/blob/master/sample.gif" width="100%" height="10%" /></a>
+<img align="left" src="https://github.com/JDevZone/FillProgressLayout/blob/master/sample.gif" width="100%" height="10%" />
+</a>
 
 
 
@@ -80,6 +81,18 @@
                 android:layout_height="wrap_content"/>
     </RelativeLayout>
 ``` 
+### Samples
+
+| Fill Direction | Demo |
+| --- | :---: |
+| <p align="center">Left To Right</p> | <img src="art/left_to_right.gif" width="90%"/> |
+| <p align="center">Right To Left</p> | <img src="art/right_to_left.gif" width="90%"  /> |
+| <p align="center">Top To Bottom</p> | <img src="art/top_to_bottom.gif" width="90%"  /> |
+| <p align="center">Bottom To Top</p> | <img src="art/bottom_to_top.gif" width="90%"  /> |
+
+### Additional Rounded Corners sample
+
+<img align="left" src="art/rounded_corners.gif" width="100%" />
 
 ### Customisation
 
