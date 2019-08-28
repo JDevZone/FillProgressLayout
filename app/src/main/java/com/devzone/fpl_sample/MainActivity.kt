@@ -1,31 +1,30 @@
 package com.devzone.fpl_sample
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.SeekBar
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() , SeekBar.OnSeekBarChangeListener {
+class MainActivity : AppCompatActivity() {
 
+    private var isFilled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        seek.setOnSeekBarChangeListener(this)
 
     }
 
+    fun toggleFill(view: View) {
+        val button: AppCompatButton = view as AppCompatButton
+        button.isEnabled = false
 
+        isFilled = !isFilled
+        fillL.setProgress(if (isFilled) 100 else 0)
+        fillL.setDoOnProgressEnd { v ->
+            button.isEnabled = true;button.text = if (isFilled) "Unfill" else "Fill"
+        }
 
-    override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
-    }
-
-    override fun onStopTrackingTouch(seekBar: SeekBar?) {
-    }
-
-    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-        fillL.setProgress(progress)
-        fillB.setProgress(progress)
     }
 }
