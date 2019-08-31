@@ -15,7 +15,7 @@
 
 [![](https://jitpack.io/v/JDevZone/FillProgressLayout.svg)](https://jitpack.io/#JDevZone/FillProgressLayout)
 [![GitHub license](https://img.shields.io/github/license/JDevZone/FillProgressLayout.svg?style=flat)](https://github.com/JDevZone/FillProgressLayout/blob/master/LICENSE)
-
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-FillProgressLayout-orange.svg?style=flat)](https://android-arsenal.com/details/1/7840)
 
 ---------------------------
 ### Installation
