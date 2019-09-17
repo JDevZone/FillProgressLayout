@@ -216,12 +216,14 @@ class FillProgressLayout : LinearLayout {
     fun setProgressBackgroundColor(@ColorRes resId: Int) {
         if (isValidRes(resId)) {
             mBackgroundColor = ContextCompat.getColor(context, resId)
+            initPaint()
         }
     }
 
     fun setProgressColor(@ColorRes resId: Int) {
         if (isValidRes(resId)) {
             mProgressColor = ContextCompat.getColor(context, resId)
+            initPaint()
         }
     }
 
