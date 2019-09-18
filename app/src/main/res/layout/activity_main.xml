@@ -12,7 +12,8 @@
             android:layout_margin="30dp"
             app:fpl_backgroundColor="@color/colorRedTrans"
             app:fpl_progressColor="@color/colorGreenTrans"
-            app:fpl_isRounded="false"
+            app:fpl_isRounded="true"
+            app:fpl_roundedCornerRadius="100"
             app:fpl_progress="0"
             app:fpl_progressDuration="2000"
             app:fpl_progressDirection="left_to_right"
@@ -44,6 +45,8 @@
         <com.devzone.fillprogresslayout.FillProgressLayout
                 android:layout_alignBottom="@+id/tv"
                 android:layout_alignParentTop="true"
+                app:fpl_roundedCornerRadius="100"
+                app:fpl_isRounded="true"
                 android:id="@+id/fillB"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -57,7 +60,7 @@
                 android:layout_height="wrap_content"/>
     </RelativeLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

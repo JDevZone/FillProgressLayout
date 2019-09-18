@@ -190,6 +190,12 @@ class FillProgressLayout : LinearLayout {
         super.onDetachedFromWindow()
     }
 
+    override fun dispatchDraw(canvas: Canvas?) { // child clipping done here
+        if(isRounded)
+            canvas?.clipPath(clipPath)
+        super.dispatchDraw(canvas)
+    }
+
 //---------------------public setters--------------------------------------------------------------------//
 
     fun setProgress(p: Int) {
@@ -210,12 +216,14 @@ class FillProgressLayout : LinearLayout {
     fun setProgressBackgroundColor(@ColorRes resId: Int) {
         if (isValidRes(resId)) {
             mBackgroundColor = ContextCompat.getColor(context, resId)
+            initPaint()
         }
     }
 
     fun setProgressColor(@ColorRes resId: Int) {
         if (isValidRes(resId)) {
             mProgressColor = ContextCompat.getColor(context, resId)
+            initPaint()
         }
     }
 
