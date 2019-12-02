@@ -15,6 +15,7 @@
             app:fpl_isRounded="true"
             app:fpl_roundedCornerRadius="100"
             app:fpl_progress="0"
+            app:fpl_gradientMovement="true"
             app:fpl_progressDuration="2000"
             app:fpl_progressDirection="left_to_right"
             app:fpl_shouldRestart="false"
@@ -45,9 +46,11 @@
         <com.devzone.fillprogresslayout.FillProgressLayout
                 android:layout_alignBottom="@+id/tv"
                 android:layout_alignParentTop="true"
-                app:fpl_roundedCornerRadius="100"
+                app:fpl_roundedCornerRadius="20"
                 app:fpl_isRounded="true"
                 android:id="@+id/fillB"
+                app:fpl_gradientMovement="false"
+                app:fpl_gradientColors="@array/gradientColors"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

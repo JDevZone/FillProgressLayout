@@ -6,6 +6,7 @@ import android.content.res.TypedArray
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.LinearLayout
@@ -22,6 +23,11 @@ class FillProgressLayout : LinearLayout {
         const val RIGHT_TO_LEFT = 1
         const val TOP_TO_BOTTOM = 2
         const val BOTTOM_TO_TOP = 3
+        //specific for gradient direction
+        const val TOP_LEFT_TO_BOTTOM_RIGHT = 4
+        const val TOP_RIGHT_TO_BOTTOM_LEFT = 5
+        const val BOTTOM_RIGHT_TO_TOP_LEFT = 6
+        const val BOTTOM_LEFT_TO_TOP_RIGHT = 7
     }
 
     //default values
@@ -34,16 +40,20 @@ class FillProgressLayout : LinearLayout {
     private val defProgressColor = Color.GRAY
     private val defIsRestart = false
     private val defIsRounded = false
+    private val defGradientMovement = false
 
     // customisable values
     private var isRounded = defIsRounded
     private var isRestart = defIsRestart
+    private var gradientMovement = defGradientMovement
 
     private var mDurationFactor = defDurationFactor
     private var mDirection = defDirection
     private var mCornerRadius = defCornerRadius
     private var mBackgroundColor = defBackgroundColor
     private var mProgressColor = defProgressColor
+    private var mGradientDirection = defDirection
+    private var mGradientColors = intArrayOf()
 
     private var oldProgress = 0
     private var currentProgress = 0
@@ -55,7 +65,7 @@ class FillProgressLayout : LinearLayout {
     private val clipPath = Path()
     private var progressRectF = RectF()
     private var backRectF = RectF()
-    private var doOnProgressEnd:((v:View)->Unit)?=null
+    private var doOnProgressEnd: ((v: View) -> Unit)? = null
 
 
     constructor(context: Context) : super(context) {
@@ -81,7 +91,8 @@ class FillProgressLayout : LinearLayout {
         setWillNotDraw(false)
 
         attrs?.let {
-            val array: TypedArray = context.obtainStyledAttributes(it, R.styleable.FillProgressLayout)
+            val array: TypedArray =
+                context.obtainStyledAttributes(it, R.styleable.FillProgressLayout)
             if (array.length() > 0) {
                 mBackgroundColor = array.getColor(
                     R.styleable.FillProgressLayout_fpl_backgroundColor,
@@ -92,25 +103,50 @@ class FillProgressLayout : LinearLayout {
                     defProgressColor
                 )
 
-                val restart = array.getBoolean(R.styleable.FillProgressLayout_fpl_shouldRestart, defIsRestart)
+                val restart =
+                    array.getBoolean(R.styleable.FillProgressLayout_fpl_shouldRestart, defIsRestart)
                 shouldStartFromZero(restart)
 
                 val cornerRadius =
-                    array.getFloat(R.styleable.FillProgressLayout_fpl_roundedCornerRadius, defCornerRadius)
+                    array.getFloat(
+                        R.styleable.FillProgressLayout_fpl_roundedCornerRadius,
+                        defCornerRadius
+                    )
                 setCornerRadius(cornerRadius)
 
-                val isRounded = array.getBoolean(R.styleable.FillProgressLayout_fpl_isRounded, defIsRounded)
+                val isRounded =
+                    array.getBoolean(R.styleable.FillProgressLayout_fpl_isRounded, defIsRounded)
                 setRoundedCorners(isRounded)
 
-                val duration = array.getInt(R.styleable.FillProgressLayout_fpl_progressDuration, defDuration)
+                val duration =
+                    array.getInt(R.styleable.FillProgressLayout_fpl_progressDuration, defDuration)
                 setDuration(duration.toLong())
 
-                val direction = array.getInt(R.styleable.FillProgressLayout_fpl_progressDirection, defDirection)
-                setDirection(direction)
+                val direction =
+                    array.getInt(R.styleable.FillProgressLayout_fpl_progressDirection, defDirection)
+                setFillDirection(direction)
 
                 val progress =
                     array.getInt(R.styleable.FillProgressLayout_fpl_progress, currentProgress)
                 setProgress(progress)
+
+                val gradDirection =
+                    array.getInt(R.styleable.FillProgressLayout_fpl_gradientDirection, defDirection)
+                setGradientDirection(gradDirection)
+
+                val gradMovement =
+                    array.getBoolean(R.styleable.FillProgressLayout_fpl_gradientMovement, defGradientMovement)
+                setGradientMovement(gradMovement)
+
+                try {
+                    val colorsId =
+                        array.getResourceId(R.styleable.FillProgressLayout_fpl_gradientColors, 0)
+                    val gradColors = array.resources.getIntArray(colorsId)
+                    if (gradColors.isNotEmpty())
+                        setProgressColors(gradColors, false)
+                } catch (e: Exception) {
+                    log("Error setting Gradient colors! Use @array/colors or int array of R.color.colorName values")
+                }
             }
             array.recycle()
         }
@@ -124,7 +160,7 @@ class FillProgressLayout : LinearLayout {
         }
         progressPaint.apply {
             style = Paint.Style.FILL
-            color = mProgressColor
+            color = if (mGradientColors.isEmpty()) mProgressColor else Color.BLACK
         }
 
     }
@@ -144,7 +180,8 @@ class FillProgressLayout : LinearLayout {
 
     private fun getProgress() = getSize() * currentProgress / 100
 
-    private fun getSize() = if (mDirection == LEFT_TO_RIGHT || mDirection == RIGHT_TO_LEFT) width else height
+    private fun getSize() =
+        if (mDirection == LEFT_TO_RIGHT || mDirection == RIGHT_TO_LEFT) width else height
 
     private fun updateRect(rectF: RectF) {
         when (mDirection) {
@@ -168,6 +205,7 @@ class FillProgressLayout : LinearLayout {
     private fun drawNormalProgress(canvas: Canvas?) {
         canvas?.apply {
             drawRect(backRectF, backgroundPaint)
+            applyGradientIfAny()
             drawRect(progressRectF, progressPaint)
         }
     }
@@ -177,8 +215,24 @@ class FillProgressLayout : LinearLayout {
             save()
             drawRoundRect(backRectF, mCornerRadius, mCornerRadius, backgroundPaint)
             clipPath(clipPath)
+            applyGradientIfAny()
             drawRect(progressRectF, progressPaint)
             restore()
+        }
+    }
+
+    private fun applyGradientIfAny() {
+        if (mGradientColors.isNotEmpty()) {
+            val gradientRect = getGradientRect(if (gradientMovement) progressRectF else backRectF)
+            progressPaint.shader = LinearGradient(
+                gradientRect.left,//x0
+                gradientRect.top,//y0
+                gradientRect.right,//x1
+                gradientRect.bottom,//y1
+                mGradientColors,
+                null,
+                Shader.TileMode.MIRROR
+            )
         }
     }
 
@@ -191,7 +245,7 @@ class FillProgressLayout : LinearLayout {
     }
 
     override fun dispatchDraw(canvas: Canvas?) { // child clipping done here
-        if(isRounded)
+        if (isRounded)
             canvas?.clipPath(clipPath)
         super.dispatchDraw(canvas)
     }
@@ -208,8 +262,9 @@ class FillProgressLayout : LinearLayout {
                 updateRect(rectF = progressRectF)
                 ViewCompat.postInvalidateOnAnimation(this)
             }
-            animator.doOnEnd {doOnProgressEnd?.invoke(this); if (!isRestart) oldProgress = p }
-            animator.setDuration(((kotlin.math.abs(p - oldProgress)) * mDurationFactor).toLong()).start()
+            animator.doOnEnd { doOnProgressEnd?.invoke(this); if (!isRestart) oldProgress = p }
+            animator.setDuration(((kotlin.math.abs(p - oldProgress)) * mDurationFactor).toLong())
+                .start()
         }
     }
 
@@ -227,6 +282,20 @@ class FillProgressLayout : LinearLayout {
         }
     }
 
+    fun setProgressColors(@ColorRes resIds: IntArray, extractResColor: Boolean = true) {
+        try {
+            val filtered = resIds.filter { isValidRes(it) }
+            mGradientColors = IntArray(filtered.size)
+            filtered.forEachIndexed { index, i ->
+                mGradientColors[index] =
+                    if (extractResColor) ContextCompat.getColor(context, i) else i
+            }
+            initPaint()
+        } catch (e: Exception) {
+            log("Cannot use current color values!! Use integer array of R.color.colorName values")
+        }
+    }
+
 
     fun setCornerRadius(radius: Float) {
         if (radius in 0f..maxProgress.toFloat()) {
@@ -240,6 +309,10 @@ class FillProgressLayout : LinearLayout {
         this.isRounded = isRounded
     }
 
+    fun setGradientMovement(gradMovement: Boolean) {
+        this.gradientMovement = gradMovement
+    }
+
     fun setDuration(duration: Long) {
         if (duration.toInt() == 0 || duration < 0) return
         mDurationFactor = (duration / 100).toInt()
@@ -249,12 +322,72 @@ class FillProgressLayout : LinearLayout {
         this.isRestart = isRestart
     }
 
-    fun setDirection(direction: Int) {
+    fun setFillDirection(direction: Int) {
         mDirection = if (direction in LEFT_TO_RIGHT..BOTTOM_TO_TOP) direction else defDirection
     }
 
-    fun setDoOnProgressEnd(listener:((v:View)->Unit)){
-        doOnProgressEnd=listener
+    fun setGradientDirection(direction: Int) {
+        mGradientDirection =
+            if (direction in LEFT_TO_RIGHT..BOTTOM_LEFT_TO_TOP_RIGHT) direction else defDirection
+    }
+
+    fun setDoOnProgressEnd(listener: ((v: View) -> Unit)) {
+        doOnProgressEnd = listener
+    }
+
+    private fun getGradientRect(progressRect: RectF): RectF {
+        val outRect = RectF(progressRect)
+        when (mGradientDirection) {
+            LEFT_TO_RIGHT -> {
+                outRect.left = progressRect.left
+                outRect.top = progressRect.centerY()
+                outRect.right = progressRect.right
+                outRect.bottom = progressRect.centerY()
+            }
+            TOP_TO_BOTTOM -> {
+                outRect.left = progressRect.centerX()
+                outRect.top = progressRect.top
+                outRect.right = progressRect.centerX()
+                outRect.bottom = progressRect.bottom
+            }
+            RIGHT_TO_LEFT -> {
+                outRect.left = progressRect.right
+                outRect.top = progressRect.centerY()
+                outRect.right = progressRect.left
+                outRect.bottom = progressRect.centerY()
+            }
+            BOTTOM_TO_TOP -> {
+                outRect.left = progressRect.centerX()
+                outRect.top = progressRect.bottom
+                outRect.right = progressRect.centerX()
+                outRect.bottom = progressRect.top
+            }
+            TOP_LEFT_TO_BOTTOM_RIGHT -> {
+                outRect.left = progressRect.left
+                outRect.top = progressRect.top
+                outRect.right = progressRect.right
+                outRect.bottom = progressRect.bottom
+            }
+            TOP_RIGHT_TO_BOTTOM_LEFT -> {
+                outRect.left = progressRect.right
+                outRect.top = progressRect.top
+                outRect.right = progressRect.left
+                outRect.bottom = progressRect.bottom
+            }
+            BOTTOM_RIGHT_TO_TOP_LEFT -> {
+                outRect.left = progressRect.right
+                outRect.top = progressRect.bottom
+                outRect.right = progressRect.left
+                outRect.bottom = progressRect.top
+            }
+            BOTTOM_LEFT_TO_TOP_RIGHT -> {
+                outRect.left = progressRect.left
+                outRect.top = progressRect.bottom
+                outRect.right = progressRect.right
+                outRect.bottom = progressRect.top
+            }
+        }
+        return outRect
     }
 
     //--------------------------------------------------------------------- --------------------------------------------//
@@ -268,5 +401,9 @@ class FillProgressLayout : LinearLayout {
     override fun setBackgroundDrawable(background: Drawable?) {}
     //-----------------------------------------------------------------------------------------------------------------//
 
+    private fun log(logValue: String) {
+        if (BuildConfig.DEBUG)
+            Log.e(FillProgressLayout::class.java.simpleName, logValue)
+    }
 
 }
