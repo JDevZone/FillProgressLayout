@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         isFilled = !isFilled
         fillL.setProgress(if (isFilled) 100 else 0)
         fillB.setProgress(if (isFilled) 100 else 0)
+        fillL.setProgressColors(intArrayOf(R.color.colorGradient1,R.color.colorGradient2))
         fillB.setDoOnProgressEnd { v ->
             button.isEnabled = true;button.text = if (isFilled) "Unfill" else "Fill"
         }
