@@ -93,9 +93,14 @@
 | <p align="center">Top To Bottom</p> | <img src="art/top_to_bottom.gif" width="90%"  /> |
 | <p align="center">Bottom To Top</p> | <img src="art/bottom_to_top.gif" width="90%"  /> |
 
-### Additional Rounded Corners sample
+### Additional 
+## Rounded Corners sample
 
 <img align="left" src="art/rounded_corners.gif" width="100%" />
+
+## Gradient Progress sample
+
+<img align="left" src="art/gradient.gif" width="100%" />
 
 ### Customisation
 
@@ -109,7 +114,9 @@ Here are the attributes you can specify through XML or related setters programat
 * `fpl_progressDuration` - Set fill duration.
 * `fpl_shouldRestart` - Set if progress filling should restart from 0.
 * `fpl_progressDirection` - Set fill direction. i.e. `left_to_right`,`right_to_left`,`top_to_bottom` or `bottom_to_top`
-
+* `fpl_gradientColors` - Set array of gradient colors i.e. `@array/gradientColors`
+* `fpl_gradientMovement` - Set true for gradient movement with progress and false for static filling
+* `fpl_gradientDirection` - Set Gradient direction. i.e. `left_to_right`,`right_to_left`,`top_to_bottom` ,                    `bottom_to_top`,`top_left_to_bottom_right`,`top_right_to_bottom_left`,`bottom_right_to_top_left` or`bottom_left_to_top_right`
 
 ### 📄 License
 
