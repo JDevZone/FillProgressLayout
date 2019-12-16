@@ -27,6 +27,7 @@
 			<enum name="bottom_right_to_top_left" value="6"/>
 			<enum name="bottom_left_to_top_right" value="7"/>
 		</attr>
+
 	</declare-styleable>
 	
 </resources>

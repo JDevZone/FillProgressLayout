@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 
 
+@Suppress("unused")
 class FillProgressLayout : LinearLayout {
 
     companion object {
@@ -252,19 +253,26 @@ class FillProgressLayout : LinearLayout {
 
 //---------------------public setters--------------------------------------------------------------------//
 
-    fun setProgress(p: Int) {
-        if (p in 0..maxProgress) {
+    fun setProgress(inputProgress: Int,animated:Boolean=true) {
+        if (inputProgress in 0..maxProgress) {
             clearAnimation()
-            val animator = ValueAnimator.ofInt(oldProgress, p)
-            animator.interpolator = AccelerateDecelerateInterpolator()
-            animator.addUpdateListener { anm ->
-                currentProgress = anm.animatedValue as Int
+            if(animated) {
+                val animator = ValueAnimator.ofInt(oldProgress, inputProgress)
+                animator.interpolator = AccelerateDecelerateInterpolator()
+                animator.addUpdateListener { anm ->
+                    currentProgress = anm.animatedValue as Int
+                    updateRect(rectF = progressRectF)
+                    ViewCompat.postInvalidateOnAnimation(this)
+                }
+                animator.doOnEnd { doOnProgressEnd?.invoke(this); if (!isRestart) oldProgress = inputProgress }
+                animator.setDuration(((kotlin.math.abs(inputProgress - oldProgress)) * mDurationFactor).toLong())
+                    .start()
+            }else{
+                currentProgress = inputProgress
                 updateRect(rectF = progressRectF)
+                doOnProgressEnd?.invoke(this)
                 ViewCompat.postInvalidateOnAnimation(this)
             }
-            animator.doOnEnd { doOnProgressEnd?.invoke(this); if (!isRestart) oldProgress = p }
-            animator.setDuration(((kotlin.math.abs(p - oldProgress)) * mDurationFactor).toLong())
-                .start()
         }
     }
 
