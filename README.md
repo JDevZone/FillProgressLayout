@@ -121,7 +121,7 @@ Here are the attributes you can specify through XML or related setters programat
 ### 📄 License
 
 FillProgressLayout is released under the MIT license.
-See [LICENSE](./LICENSE) for details.
+See [LICENSE](./LICENSE.txt) for details.
 
 
           
