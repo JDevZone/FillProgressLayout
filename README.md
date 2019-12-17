@@ -120,7 +120,7 @@ Here are the attributes you can specify through XML or related setters programat
 
 ### 📄 License
 
-Checkable TextView is released under the MIT license.
+FillProgressLayout is released under the MIT license.
 See [LICENSE](./LICENSE) for details.
 
 
