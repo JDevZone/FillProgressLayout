@@ -8,7 +8,13 @@
 --------------
 
 <a href="https://github.com/JDevZone/FillProgressLayout">
-<img align="left" src="https://github.com/JDevZone/FillProgressLayout/blob/master/sample.gif" width="100%" height="10%" />
+<img align="center" src="art/netflix_anim.gif" width="90%" height="10%" />
+</a>
+
+--------------
+
+<a href="https://github.com/JDevZone/FillProgressLayout">
+<img align="center" src="https://github.com/JDevZone/FillProgressLayout/blob/master/sample.gif" width="100%" height="10%" />
 </a>
 
 
