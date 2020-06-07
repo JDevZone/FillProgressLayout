@@ -2,6 +2,7 @@ package com.devzone.fpl_sample
 
 import android.os.Bundle
 import android.view.View
+import android.view.animation.LinearInterpolator
 import android.widget.Button
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         handlePreciseControls()
+        fillNF.setAnimationInterpolator(LinearInterpolator())
+
 
     }
 
@@ -55,13 +58,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun toggleFill(view: View) {
+        val isAnimated = animateCB.isChecked
         val button: Button = view as Button
         button.isEnabled = false
         isFilled = !isFilled
-        fillL?.setDoOnProgressEnd { v ->
+        fillL?.setDoOnProgressEnd { _ ->
             button.isEnabled = true;button.text = if (isFilled) "UnFill" else "Fill"
         }
-        fillL?.setProgress(if (isFilled) 100 else 0, false)
+        fillL?.setProgress(if (isFilled) 100 else 0, isAnimated)
+        fillNF?.setProgress(if (isFilled) 100 else 0)
         fillL?.setProgressColors(intArrayOf(R.color.colorGradient1, R.color.colorGradient2))
     }
 }

@@ -17,4 +17,8 @@
         <item>#FFA7A0</item>
         <item>#388E3C</item>
     </array>
+
+    <color name="netflix_white">#FFFFFFFF</color>
+    <color name="netflix_gray">#FFB2B2B2</color>
+    <color name="netflix_black">#FF1C1C1C</color>
 </resources>
