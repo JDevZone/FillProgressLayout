@@ -12,6 +12,7 @@
 </a>
 
 --------------
+<h4 align="center" >Netflix button animation using FillProgressLayout</h4>
 
 <a href="https://github.com/JDevZone/FillProgressLayout">
 <img align="center" src="art/netflix_anim.gif" width="100%" height="10%" />
