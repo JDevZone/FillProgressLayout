@@ -1,5 +1,6 @@
 package com.devzone.fillprogresslayout
 
+import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.TypedArray
@@ -24,6 +25,7 @@ class FillProgressLayout : LinearLayout {
         const val RIGHT_TO_LEFT = 1
         const val TOP_TO_BOTTOM = 2
         const val BOTTOM_TO_TOP = 3
+
         //specific for gradient direction
         const val TOP_LEFT_TO_BOTTOM_RIGHT = 4
         const val TOP_RIGHT_TO_BOTTOM_LEFT = 5
@@ -42,6 +44,7 @@ class FillProgressLayout : LinearLayout {
     private val defIsRestart = false
     private val defIsRounded = false
     private val defGradientMovement = false
+    private val defAnimInterpolator = AccelerateDecelerateInterpolator()
 
     // customisable values
     private var isRounded = defIsRounded
@@ -55,6 +58,8 @@ class FillProgressLayout : LinearLayout {
     private var mProgressColor = defProgressColor
     private var mGradientDirection = defDirection
     private var mGradientColors = intArrayOf()
+
+    private var animInterpolator: TimeInterpolator = defAnimInterpolator
 
     private var oldProgress = 0
     private var currentProgress = 0
@@ -136,7 +141,10 @@ class FillProgressLayout : LinearLayout {
                 setGradientDirection(gradDirection)
 
                 val gradMovement =
-                    array.getBoolean(R.styleable.FillProgressLayout_fpl_gradientMovement, defGradientMovement)
+                    array.getBoolean(
+                        R.styleable.FillProgressLayout_fpl_gradientMovement,
+                        defGradientMovement
+                    )
                 setGradientMovement(gradMovement)
 
                 try {
@@ -253,21 +261,29 @@ class FillProgressLayout : LinearLayout {
 
 //---------------------public setters--------------------------------------------------------------------//
 
-    fun setProgress(inputProgress: Int,animated:Boolean=true) {
+    /**
+     * This method is used to set the current progress value externally
+     * with or without animation
+     * @param inputProgress current progress value
+     * @param animated should animate filling
+     */
+    fun setProgress(inputProgress: Int, animated: Boolean = true) {
         if (inputProgress in 0..maxProgress) {
             clearAnimation()
-            if(animated) {
+            if (animated) {
                 val animator = ValueAnimator.ofInt(oldProgress, inputProgress)
-                animator.interpolator = AccelerateDecelerateInterpolator()
+                animator.interpolator = animInterpolator
                 animator.addUpdateListener { anm ->
                     currentProgress = anm.animatedValue as Int
                     updateRect(rectF = progressRectF)
                     ViewCompat.postInvalidateOnAnimation(this)
                 }
-                animator.doOnEnd { doOnProgressEnd?.invoke(this); if (!isRestart) oldProgress = inputProgress }
+                animator.doOnEnd {
+                    doOnProgressEnd?.invoke(this); if (!isRestart) oldProgress = inputProgress
+                }
                 animator.setDuration(((kotlin.math.abs(inputProgress - oldProgress)) * mDurationFactor).toLong())
                     .start()
-            }else{
+            } else {
                 currentProgress = inputProgress
                 updateRect(rectF = progressRectF)
                 doOnProgressEnd?.invoke(this)
@@ -276,6 +292,22 @@ class FillProgressLayout : LinearLayout {
         }
     }
 
+    /**
+     * This method is used to set progress animation interpolator
+     * for different filling effects
+     * @see TimeInterpolator
+     * @param interpolator interpolator for animation
+     * default value is
+     * @see AccelerateDecelerateInterpolator
+     */
+    fun setAnimationInterpolator(interpolator: TimeInterpolator) {
+        animInterpolator = interpolator
+    }
+
+    /**
+     * This method is used to set the background color
+     * @param resId color resource id
+     */
     fun setProgressBackgroundColor(@ColorRes resId: Int) {
         if (isValidRes(resId)) {
             mBackgroundColor = ContextCompat.getColor(context, resId)
@@ -283,6 +315,10 @@ class FillProgressLayout : LinearLayout {
         }
     }
 
+    /**
+     * This method is used to set the foreground/progress color
+     * @param resId color resource id
+     */
     fun setProgressColor(@ColorRes resId: Int) {
         if (isValidRes(resId)) {
             mProgressColor = ContextCompat.getColor(context, resId)
@@ -290,6 +326,12 @@ class FillProgressLayout : LinearLayout {
         }
     }
 
+    /**
+     * This method is used to set multiple colors for gradient effect
+     * @param resIds array of color resource ids
+     * @param extractResColor flag for color extraction
+     * @see ContextCompat.getColor
+     */
     fun setProgressColors(@ColorRes resIds: IntArray, extractResColor: Boolean = true) {
         try {
             val filtered = resIds.filter { isValidRes(it) }
@@ -304,7 +346,11 @@ class FillProgressLayout : LinearLayout {
         }
     }
 
-
+    /**
+     * This method is used to make progress layout corners rounded
+     * and roundness is adjusted with a float value
+     * @param radius corner radius for progress layout
+     */
     fun setCornerRadius(radius: Float) {
         if (radius in 0f..maxProgress.toFloat()) {
             setRoundedCorners(true)
@@ -312,33 +358,70 @@ class FillProgressLayout : LinearLayout {
         }
     }
 
-
+    /**
+     * This method is used to make progress layout corners rounded
+     * @param isRounded flag for rounded corners support
+     */
     fun setRoundedCorners(isRounded: Boolean) {
         this.isRounded = isRounded
     }
 
+    /**
+     * This method is used to adjust the movement of progress gradient
+     * if true the gradient will move will progress and
+     * if false the gradient will stay as background paint and will reveals with progress
+     * @param gradMovement flag for gradient movement
+     */
     fun setGradientMovement(gradMovement: Boolean) {
         this.gradientMovement = gradMovement
     }
 
+    /**
+     * @param duration should be in millis i.e 2000 for 2 seconds
+     */
     fun setDuration(duration: Long) {
         if (duration.toInt() == 0 || duration < 0) return
         mDurationFactor = (duration / 100).toInt()
     }
 
+    /**
+     * This method is used to make progress restart or resume from old position
+     * if true the gradient will restart from zero to progress value
+     * if false the gradient will resume from old to new progress value
+     * @param isRestart flag for gradient movement
+     */
     fun shouldStartFromZero(isRestart: Boolean) {
         this.isRestart = isRestart
     }
 
+    /**
+     * This method is used to set the direction of fill
+     * from values LEFT_TO_RIGHT to BOTTOM_TO_TOP
+     * default value is #LEFT_TO_RIGHT
+     * @param direction value for fill direction
+     * @see LEFT_TO_RIGHT
+     */
     fun setFillDirection(direction: Int) {
         mDirection = if (direction in LEFT_TO_RIGHT..BOTTOM_TO_TOP) direction else defDirection
     }
 
+    /**
+     * This method is used to set the direction of gradient fill
+     * from values LEFT_TO_RIGHT to BOTTOM_LEFT_TO_TOP_RIGHT
+     * default value is #LEFT_TO_RIGHT
+     * @param direction value for fill direction
+     * @see LEFT_TO_RIGHT
+     */
     fun setGradientDirection(direction: Int) {
         mGradientDirection =
             if (direction in LEFT_TO_RIGHT..BOTTOM_LEFT_TO_TOP_RIGHT) direction else defDirection
     }
 
+    /**
+     * This method is used to set a listener to get callback
+     * when progress animation ends
+     * @param listener a lambda function to invoke after progress animation ends
+     */
     fun setDoOnProgressEnd(listener: ((v: View) -> Unit)) {
         doOnProgressEnd = listener
     }
