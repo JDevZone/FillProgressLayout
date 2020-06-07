@@ -1,109 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".MainActivity">
+        android:layout_height="wrap_content"
+        android:background="@color/netflix_black">
 
-    <com.devzone.fillprogresslayout.FillProgressLayout
-            android:id="@+id/fillL"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="30dp"
-            app:fpl_backgroundColor="@color/colorRedTrans"
-            app:fpl_gradientMovement="true"
-            app:fpl_isRounded="true"
-            app:fpl_progress="0"
-            app:fpl_progressColor="@color/colorGreenTrans"
-            app:fpl_progressDirection="left_to_right"
-            app:fpl_progressDuration="2000"
-            app:fpl_roundedCornerRadius="100"
-            app:fpl_shouldRestart="false">
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="@string/app_name" />
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="@string/app_name" />
-    </com.devzone.fillprogresslayout.FillProgressLayout>
-
-    <Button
+        <com.devzone.fillprogresslayout.FillProgressLayout
+            android:id="@+id/fillNF"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:onClick="toggleFill"
-            android:text="fill"
-            tools:ignore="HardcodedText" />
+            android:layout_margin="20dp"
+            android:gravity="center"
+            app:fpl_backgroundColor="@color/netflix_gray"
+            app:fpl_gradientMovement="true"
+            app:fpl_isRounded="true"
+            app:fpl_progress="0"
+            app:fpl_progressColor="@color/netflix_white"
+            app:fpl_progressDirection="left_to_right"
+            app:fpl_progressDuration="2000"
+            app:fpl_roundedCornerRadius="8"
+            app:fpl_shouldRestart="false">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="20dp"
+                android:drawableStart="@drawable/ic_play_vector"
+                android:drawablePadding="10dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Next Episode"
+                android:textColor="@color/netflix_black"
+                android:textStyle="bold" />
+
+        </com.devzone.fillprogresslayout.FillProgressLayout>
+    </FrameLayout>
+
+    <com.devzone.fillprogresslayout.FillProgressLayout
+        android:id="@+id/fillL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        app:fpl_backgroundColor="@color/colorRedTrans"
+        app:fpl_gradientMovement="true"
+        app:fpl_isRounded="true"
+        app:fpl_progress="0"
+        app:fpl_progressColor="@color/colorGreenTrans"
+        app:fpl_progressDirection="left_to_right"
+        app:fpl_progressDuration="2000"
+        app:fpl_roundedCornerRadius="100"
+        app:fpl_shouldRestart="false">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/app_name" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/app_name" />
+    </com.devzone.fillprogresslayout.FillProgressLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:onClick="toggleFill"
+        android:text="fill"
+        tools:ignore="HardcodedText" />
 
     <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp">
 
         <com.devzone.fillprogresslayout.FillProgressLayout
-                android:id="@+id/fillB"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/tv"
-                android:layout_alignParentTop="true"
-                app:fpl_gradientColors="@array/gradientColors"
-                app:fpl_gradientMovement="false"
-                app:fpl_isRounded="true"
-                app:fpl_roundedCornerRadius="20" />
+            android:id="@+id/fillB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/tv"
+            android:layout_alignParentTop="true"
+            app:fpl_gradientColors="@array/gradientColors"
+            app:fpl_gradientMovement="false"
+            app:fpl_isRounded="true"
+            app:fpl_roundedCornerRadius="20" />
 
         <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="20dp"
-                android:text="@string/app_name" />
+            android:id="@+id/tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="20dp"
+            android:text="@string/app_name" />
     </RelativeLayout>
 
     <RadioGroup
-            android:layout_width="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/reverseCB"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_margin="5dp"
+            android:text="Reverse" />
 
         <androidx.appcompat.widget.AppCompatCheckBox
-                android:id="@+id/reverseCB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="Reverse" />
-
-        <androidx.appcompat.widget.AppCompatCheckBox
-                android:id="@+id/animateCB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="Animate" />
+            android:id="@+id/animateCB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Animate" />
     </RadioGroup>
 
 
     <SeekBar
-            android:id="@+id/progressSeek"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp" />
+        android:id="@+id/progressSeek"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp" />
 
 
 </LinearLayout>
