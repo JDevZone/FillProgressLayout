@@ -8,16 +8,16 @@
 --------------
 
 <a href="https://github.com/JDevZone/FillProgressLayout">
-<img align="center" src="art/netflix_anim.gif" width="90%" height="10%" />
+<img align="center" src="https://github.com/JDevZone/FillProgressLayout/blob/master/sample.gif" width="100%" height="10%" />
 </a>
 
 --------------
 
 <a href="https://github.com/JDevZone/FillProgressLayout">
-<img align="center" src="https://github.com/JDevZone/FillProgressLayout/blob/master/sample.gif" width="100%" height="10%" />
+<img align="center" src="art/netflix_anim.gif" width="100%" height="10%" />
 </a>
 
-
+--------------
 
 [![](https://jitpack.io/v/JDevZone/FillProgressLayout.svg)](https://jitpack.io/#JDevZone/FillProgressLayout)
 [![GitHub license](https://img.shields.io/github/license/JDevZone/FillProgressLayout.svg?style=flat)](https://github.com/JDevZone/FillProgressLayout/blob/master/LICENSE)
