@@ -1,11 +1,15 @@
 package com.devzone.fpl_sample
 
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.Button
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.devzone.fillprogresslayout.FillProgressLayout
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -17,7 +21,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         handlePreciseControls()
         fillNF.setAnimationInterpolator(LinearInterpolator())
-
+        fishCardFPL?.apply {
+            setProgressUpdateListener { progress ->
+                val color = if (progress > 60) R.color.colorBlue else R.color.colorRed
+                fishIV?.colorFilter = PorterDuffColorFilter(
+                    ContextCompat.getColor(this@MainActivity, color),
+                    PorterDuff.Mode.SRC_IN
+                )
+            }
+        }
 
     }
 
@@ -49,12 +61,9 @@ class MainActivity : AppCompatActivity() {
     private fun updateLargeProgress(progress: Int) {
         val isAnimated = animateCB.isChecked
         val isReverse = reverseCB.isChecked
-
-        if (isReverse) {
-            val reverseProgress = kotlin.math.abs(100 - progress)
-            fillB.setProgress(reverseProgress, isAnimated)
-        } else
-            fillB.setProgress(progress, isAnimated)
+        val currentProgress = if (isReverse) kotlin.math.abs(100 - progress) else progress
+        fillB.setProgress(currentProgress, isAnimated)
+        fishCardFPL?.setProgress(currentProgress, isAnimated)
     }
 
     fun toggleFill(view: View) {
@@ -69,4 +78,16 @@ class MainActivity : AppCompatActivity() {
         fillNF?.setProgress(if (isFilled) 100 else 0)
         fillL?.setProgressColors(intArrayOf(R.color.colorGradient1, R.color.colorGradient2))
     }
+
+    fun toggleFillLayout(view: View) {
+        if(view !is FillProgressLayout) return
+        val isAnimated = animateCB.isChecked
+        view.apply {
+            when (currentProgress){
+                in 50..99,0 ->  setProgress(100,isAnimated)
+                in 0..50,100 ->  setProgress(0,isAnimated)
+            }
+        }
+    }
+
 }

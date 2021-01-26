@@ -35,7 +35,7 @@ class FillProgressLayout : LinearLayout {
 
     //default values
     private val maxProgress = 100
-    private val defDurationFactor = 30
+    private val defDurationFactor = 20
     private val defDuration = defDurationFactor * 100 //3000 ms or 3 second (for 0 to 100 progress)
     private val defCornerRadius = 20f
     private val defDirection = LEFT_TO_RIGHT
@@ -48,8 +48,10 @@ class FillProgressLayout : LinearLayout {
 
     // customisable values
     private var isRounded = defIsRounded
-    private var isRestart = defIsRestart
-    private var gradientMovement = defGradientMovement
+    private var isRestart =
+        defIsRestart // restart progress from 0 if true else from last progress value
+    private var gradientMovement =
+        defGradientMovement // gradient color move with progress if true else stay static
 
     private var mDurationFactor = defDurationFactor
     private var mDirection = defDirection
@@ -60,9 +62,11 @@ class FillProgressLayout : LinearLayout {
     private var mGradientColors = intArrayOf()
 
     private var animInterpolator: TimeInterpolator = defAnimInterpolator
-
+    var mAnimator: ValueAnimator? = null // progress animator
+        private set
     private var oldProgress = 0
-    private var currentProgress = 0
+    var currentProgress = 0
+        private set
 
 
     //drawing assets
@@ -72,6 +76,7 @@ class FillProgressLayout : LinearLayout {
     private var progressRectF = RectF()
     private var backRectF = RectF()
     private var doOnProgressEnd: ((v: View) -> Unit)? = null
+    private var progressUpdateListener: ((progress: Int) -> Unit)? = null
 
 
     constructor(context: Context) : super(context) {
@@ -269,25 +274,33 @@ class FillProgressLayout : LinearLayout {
      */
     fun setProgress(inputProgress: Int, animated: Boolean = true) {
         if (inputProgress in 0..maxProgress) {
+            if (mAnimator?.isRunning == true)
+                mAnimator?.end()
             clearAnimation()
             if (animated) {
-                val animator = ValueAnimator.ofInt(oldProgress, inputProgress)
-                animator.interpolator = animInterpolator
-                animator.addUpdateListener { anm ->
-                    currentProgress = anm.animatedValue as Int
-                    updateRect(rectF = progressRectF)
-                    ViewCompat.postInvalidateOnAnimation(this)
+                mAnimator = ValueAnimator.ofInt(oldProgress, inputProgress).apply {
+                    interpolator = animInterpolator
+                    addUpdateListener { anm ->
+                        currentProgress = anm.animatedValue as Int
+                        progressUpdateListener?.invoke(currentProgress)
+                        updateRect(rectF = progressRectF)
+                        ViewCompat.postInvalidateOnAnimation(this@FillProgressLayout)
+                    }
+                    doOnEnd {
+                        doOnProgressEnd?.invoke(this@FillProgressLayout)
+                        if (!isRestart) oldProgress = inputProgress
+                    }
+                    duration =
+                        ((kotlin.math.abs(inputProgress - oldProgress)) * mDurationFactor).toLong()
                 }
-                animator.doOnEnd {
-                    doOnProgressEnd?.invoke(this); if (!isRestart) oldProgress = inputProgress
-                }
-                animator.setDuration(((kotlin.math.abs(inputProgress - oldProgress)) * mDurationFactor).toLong())
-                    .start()
+                mAnimator?.start()
             } else {
                 currentProgress = inputProgress
+                progressUpdateListener?.invoke(currentProgress)
+                if (!isRestart) oldProgress = inputProgress
                 updateRect(rectF = progressRectF)
-                doOnProgressEnd?.invoke(this)
                 ViewCompat.postInvalidateOnAnimation(this)
+                doOnProgressEnd?.invoke(this)
             }
         }
     }
@@ -424,6 +437,16 @@ class FillProgressLayout : LinearLayout {
      */
     fun setDoOnProgressEnd(listener: ((v: View) -> Unit)) {
         doOnProgressEnd = listener
+    }
+
+    /**
+     * This method is used to set a listener to get callback
+     * for progress updates
+     * @param listener a lambda function to invoke when progress changes
+     * in both animated and non-animated case
+     */
+    fun setProgressUpdateListener(listener: ((progress: Int) -> Unit)) {
+        progressUpdateListener = listener
     }
 
     private fun getGradientRect(progressRect: RectF): RectF {

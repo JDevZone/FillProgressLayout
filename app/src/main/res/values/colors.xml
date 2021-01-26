@@ -5,6 +5,8 @@
     <color name="colorAccent">#D81B60</color>
     <color name="colorRed">#F44336</color>
     <color name="colorRedTrans">#FFEBEE</color>
+    <color name="colorBlue">#448AFF</color>
+    <color name="colorBlueTrans">#33448AFF</color>
     <color name="colorGreen">#388E3C</color>
     <color name="colorGreenTrans">#5966BB6A</color>
     <color name="colorLightGray">#80ACACAC</color>
