@@ -157,7 +157,7 @@ class FillProgressLayout : LinearLayout {
                         array.getResourceId(R.styleable.FillProgressLayout_fpl_gradientColors, 0)
                     val gradColors = array.resources.getIntArray(colorsId)
                     if (gradColors.isNotEmpty())
-                        setProgressColors(gradColors, false)
+                        setProgressColors(gradColors)
                 } catch (e: Exception) {
                     log("Error setting Gradient colors! Use @array/colors or int array of R.color.colorName values")
                 }
@@ -319,24 +319,28 @@ class FillProgressLayout : LinearLayout {
 
     /**
      * This method is used to set the background color
-     * @param resId color resource id
+     * @param color color resource id or colorInt
      */
-    fun setProgressBackgroundColor(@ColorRes resId: Int) {
-        if (isValidRes(resId)) {
-            mBackgroundColor = ContextCompat.getColor(context, resId)
-            initPaint()
+    fun setProgressBackgroundColor(color: Int) {
+        mBackgroundColor = try {
+            ContextCompat.getColor(context, color)
+        } catch (e: java.lang.Exception) {
+            color
         }
+        initPaint()
     }
 
     /**
      * This method is used to set the foreground/progress color
-     * @param resId color resource id
+     * @param color color resource id or colorInt
      */
-    fun setProgressColor(@ColorRes resId: Int) {
-        if (isValidRes(resId)) {
-            mProgressColor = ContextCompat.getColor(context, resId)
-            initPaint()
+    fun setProgressColor(color: Int) {
+        mProgressColor = try {
+            ContextCompat.getColor(context, color)
+        } catch (e: java.lang.Exception) {
+            color
         }
+        initPaint()
     }
 
     /**
@@ -345,13 +349,17 @@ class FillProgressLayout : LinearLayout {
      * @param extractResColor flag for color extraction
      * @see ContextCompat.getColor
      */
-    fun setProgressColors(@ColorRes resIds: IntArray, extractResColor: Boolean = true) {
+    fun setProgressColors(@ColorRes resIds: IntArray) {
         try {
             val filtered = resIds.filter { isValidRes(it) }
             mGradientColors = IntArray(filtered.size)
             filtered.forEachIndexed { index, i ->
                 mGradientColors[index] =
-                    if (extractResColor) ContextCompat.getColor(context, i) else i
+                    try {
+                        ContextCompat.getColor(context, i)
+                    } catch (e: java.lang.Exception) {
+                        i
+                    }
             }
             initPaint()
         } catch (e: Exception) {
