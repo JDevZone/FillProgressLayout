@@ -30,7 +30,7 @@
                 app:fpl_progress="0"
                 app:fpl_progressColor="@color/netflix_white"
                 app:fpl_progressDirection="left_to_right"
-                app:fpl_progressDuration="2000"
+                app:fpl_progressDuration="1000"
                 app:fpl_roundedCornerRadius="8"
                 app:fpl_shouldRestart="false">
 
@@ -95,6 +95,28 @@
             android:text="fill"
             tools:ignore="HardcodedText" />
 
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/reverseCB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="Reverse" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/animateCB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:text="Animate" />
+        </RadioGroup>
+
 
         <com.devzone.fillprogresslayout.FillProgressLayout
             android:id="@+id/fishCardFPL"
@@ -150,27 +172,7 @@
                 android:text="@string/app_name" />
         </RelativeLayout>
 
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:orientation="horizontal">
 
-            <androidx.appcompat.widget.AppCompatCheckBox
-                android:id="@+id/reverseCB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="Reverse" />
-
-            <androidx.appcompat.widget.AppCompatCheckBox
-                android:id="@+id/animateCB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="Animate" />
-        </RadioGroup>
 
 
         <SeekBar
