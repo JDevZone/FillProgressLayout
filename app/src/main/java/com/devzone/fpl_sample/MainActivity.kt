@@ -5,7 +5,6 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.view.View
-import android.view.animation.BounceInterpolator
 import android.view.animation.LinearInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.Button
@@ -99,9 +98,5 @@ class MainActivity : AppCompatActivity() {
         fillB.setProgress(currentProgress, isAnimated)
         fishCardFPL?.setProgress(currentProgress, isAnimated)
     }
-
-
-
-
 
 }
