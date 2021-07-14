@@ -17,7 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 
 
-@Suppress("unused")
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 class FillProgressLayout : LinearLayout {
 
     companion object {
@@ -346,7 +346,6 @@ class FillProgressLayout : LinearLayout {
     /**
      * This method is used to set multiple colors for gradient effect
      * @param resIds array of color resource ids
-     * @param extractResColor flag for color extraction
      * @see ContextCompat.getColor
      */
     fun setProgressColors(@ColorRes resIds: IntArray) {
@@ -443,7 +442,7 @@ class FillProgressLayout : LinearLayout {
      * when progress animation ends
      * @param listener a lambda function to invoke after progress animation ends
      */
-    fun setDoOnProgressEnd(listener: ((v: View) -> Unit)) {
+    fun setDoOnProgressEnd(listener: ((v: View) -> Unit)?) {
         doOnProgressEnd = listener
     }
 
@@ -453,7 +452,7 @@ class FillProgressLayout : LinearLayout {
      * @param listener a lambda function to invoke when progress changes
      * in both animated and non-animated case
      */
-    fun setProgressUpdateListener(listener: ((progress: Int) -> Unit)) {
+    fun setProgressUpdateListener(listener: ((progress: Int) -> Unit)?) {
         progressUpdateListener = listener
     }
 
